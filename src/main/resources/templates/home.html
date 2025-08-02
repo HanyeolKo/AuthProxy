@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Auth Proxy</title>
+    <style>
+        body {
+            background: #f8fafc;
+            font-family: 'Segoe UI', Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            color: #333;
+        }
+        .navbar {
+            background: #4285f4;
+            color: #fff;
+            padding: 16px 32px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .navbar h1 {
+            margin: 0;
+            font-size: 1.4em;
+            letter-spacing: 1px;
+        }
+        .nav-links a {
+            color: #fff;
+            text-decoration: none;
+            margin-left: 18px;
+            font-weight: 500;
+            transition: text-decoration 0.2s;
+        }
+        .nav-links a:hover {
+            text-decoration: underline;
+        }
+        .container {
+            max-width: 600px;
+            margin: 80px auto 0 auto;
+            background: #fff;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px #bcc7d154;
+            padding: 42px 38px 30px 38px;
+            text-align: center;
+        }
+        h2 {
+            color: #4285f4;
+            margin: 0 0 24px;
+            font-size: 2em;
+        }
+        p {
+            color: #616466;
+            line-height: 1.7;
+            font-size: 1.06em;
+        }
+        .google-login-btn {
+            margin-top: 32px;
+            background-color: #4285F4;
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            font-size: 17px;
+            cursor: pointer;
+            border-radius: 4px;
+            display: inline-flex;
+            align-items: center;
+            gap: 9px;
+            font-family: inherit;
+            box-shadow: 0 1px 8px #bbb5;
+        }
+        .google-login-btn:hover {
+            background-color: #357ae8;
+        }
+        .google-logo {
+            height: 22px;
+            width: 22px;
+        }
+        .footer {
+            margin-top: 60px;
+            padding: 16px 0;
+            background: #e9ecef;
+            color: #797a7e;
+            text-align: center;
+            font-size: 0.97em;
+        }
+    </style>
+</head>
+<body>
+<nav class="navbar">
+    <h1>Auth Proxy</h1>
+    <div class="nav-links">
+        <a href="/">홈</a>
+        <a href="/login">로그인</a>
+        <a href="/docs">API 문서</a>
+    </div>
+</nav>
+
+<div class="container">
+    <h2>환영합니다! 👋</h2>
+    <p>
+        Auth Proxy를 통해 <b>소셜 로그인</b>,<b>사용자 계정 관리</b>를 손쉽게 구현해보세요.<br>
+        애플리케이션의 로그인(<b>인증/인가</b>) 처리를 간편하게 이용해보세요.<br>
+        로그인하여 기능을 바로 체험해 보세요!
+    </p>
+    <a href="/oauth2/authorization/google">
+        <button type="button" class="google-login-btn">
+            <svg class="google-logo" viewBox="0 0 533.5 544.3" xmlns="http://www.w3.org/2000/svg">
+                <path fill="#4285f4" d="M533.5 278.4c0-17.3-1.5-34-4.3-50.3H272v95.4h146.9c-6.3 34-25.4 62.8-54 82v68h87.1c50.9-46.9 80.5-116.1 80.5-195.1z"/>
+                <path fill="#34a853" d="M272 544.3c72.6 0 133.7-24 178.2-65.1l-87.1-68c-24 16-54.8 25-91.1 25-69.9 0-129.3-47.1-150.5-110.3h-89.5v69.8c44.2 87.3 134 148.6 239.9 148.6z"/>
+                <path fill="#fbbc04" d="M121.5 323.9c-10.4-30.9-10.4-64.5 0-95.4v-69.8H32c-34.2 67.9-34.2 148.5 0 216.4l89.5-69.8z"/>
+                <path fill="#ea4335" d="M272 107.7c38.7 0 73.4 13.3 100.8 39.5l75.6-75.6C399.1 24 338 0 272 0 166 0 76.2 61.3 32 148.6l89.5 69.8c21.2-63.2 80.6-110.7 150.5-110.7z"/>
+            </svg>
+            구글 계정으로 시작하기
+        </button>
+    </a>
+</div>
+<div class="footer">
+    © 2025 Auth Proxy Demo | Powered by Spring Boot & Google OAuth2
+</div>
+</body>
+</html>
