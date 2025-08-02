@@ -1,14 +1,11 @@
 package com.khy.authproxy.domain.manager.entity;
 
+import com.khy.authproxy.domain.common.entity.TimeStamp;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.CreationTimestamp;
-import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
-
-import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "manager")
@@ -42,13 +39,7 @@ public class Manager {
     @Column(name = "active", nullable = false)
     private boolean active = true;
 
-    @CreationTimestamp
-    @Column(name = "created_at", nullable = false, updatable = false)
-    private LocalDateTime createdAt;
-
-    @CreationTimestamp
-    @LastModifiedDate
-    @Column(name = "updated_at", nullable = false)
-    private LocalDateTime updatedAt;
+    @Embedded
+    private TimeStamp timeStamp;
 
 }
