@@ -4,6 +4,7 @@ import com.khy.authproxy.domain.common.entity.TimeStamp;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
@@ -13,6 +14,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 @EntityListeners(AuditingEntityListener.class)
 @NoArgsConstructor
 @AllArgsConstructor
+@Getter
 public class Manager {
 
     @Id
@@ -34,6 +36,9 @@ public class Manager {
 
     @Column(name = "phone")
     private String phone;
+
+    @Column(name = "token")
+    private String token;
 
     @Builder.Default
     @Column(name = "active", nullable = false)
