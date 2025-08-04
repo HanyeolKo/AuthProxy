@@ -1,4 +1,4 @@
-package com.khy.authproxy.security;
+package com.khy.authproxy.config.security;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

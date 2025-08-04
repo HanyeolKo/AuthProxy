@@ -1,4 +1,4 @@
-package com.khy.authproxy.security.strategy;
+package com.khy.authproxy.config.security.strategy;
 
 import com.khy.authproxy.exception.NotFoundUserInfoException;
 import org.springframework.security.oauth2.core.user.OAuth2User;

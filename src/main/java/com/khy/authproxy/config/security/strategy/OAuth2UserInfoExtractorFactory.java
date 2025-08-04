@@ -1,4 +1,4 @@
-package com.khy.authproxy.security.strategy;
+package com.khy.authproxy.config.security.strategy;
 
 import org.springframework.stereotype.Component;
 

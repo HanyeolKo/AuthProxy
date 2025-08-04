@@ -1,10 +1,10 @@
-package com.khy.authproxy.domain.login;
+package com.khy.authproxy.domain.common.controller;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 
 @Controller
-public class Login {
+public class LoginController {
 
     @GetMapping("/login")
     public String login(){

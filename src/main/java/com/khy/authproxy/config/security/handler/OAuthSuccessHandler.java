@@ -1,12 +1,15 @@
-package com.khy.authproxy.security.handler;
+package com.khy.authproxy.config.security.handler;
 
 import com.khy.authproxy.domain.manager.entity.Manager;
 import com.khy.authproxy.domain.manager.repository.ManagerRepository;
-import com.khy.authproxy.security.strategy.OAuth2UserInfoExtractorFactory;
+import com.khy.authproxy.config.security.jwt.JwtProvider;
+import com.khy.authproxy.config.security.strategy.OAuth2UserInfoExtractorFactory;
 import jakarta.servlet.ServletException;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
@@ -24,6 +27,13 @@ public class OAuthSuccessHandler implements AuthenticationSuccessHandler {
     private final ManagerRepository managerRepository;
     private final OAuth2UserInfoExtractorFactory extractorFactory;
     private final PasswordEncoder passwordEncoder;
+
+    private final JwtProvider jwtProvider;
+
+    @Value("${jwt.ACCESS_TOKEN_VALID_TIME}")
+    private long accessTokenExpireTime;
+    @Value(("${jwt.REFRESH_TOKEN_VALID_TIME}"))
+    private long refreshTokenExpireTime;
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
@@ -50,8 +60,25 @@ public class OAuthSuccessHandler implements AuthenticationSuccessHandler {
                     .build();
             managerRepository.save(managerUser);
         }
-        
-        //로그인 처리(jwt, 세션 아직 미정 jwt 유력)
+
+        String accessToken = jwtProvider.createAccessToken(managerUser.getLoginId());
+        String refreshToken = jwtProvider.createRefreshToken(managerUser.getLoginId());
+
+        //로그인 처리
+        Cookie accessCookie = new Cookie("accessToken", accessToken);
+        accessCookie.setMaxAge((int) accessTokenExpireTime / 1000); // 쿠키의 유효 기간을 초 단위로 설정
+        accessCookie.setHttpOnly(true); // JavaScript에서 접근할 수 없도록 설정
+        accessCookie.setSecure(true); // HTTPS에서만 전송되도록 설정
+        accessCookie.setPath("/");
+
+        Cookie refreshCookie = new Cookie("refreshToken", refreshToken);
+        refreshCookie.setMaxAge((int) refreshTokenExpireTime / 1000); // 쿠키의 유효 기간을 초 단위로 설정
+        refreshCookie.setHttpOnly(true); // JavaScript에서 접근할 수 없도록 설정
+        refreshCookie.setSecure(true); // HTTPS에서만 전송되도록 설정
+        refreshCookie.setPath("/");
+
+        response.addCookie(accessCookie);
+        response.addCookie(refreshCookie);
 
         response.sendRedirect("/");
     }

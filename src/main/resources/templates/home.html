@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <meta charset="UTF-8">
     <title>Auth Proxy</title>
@@ -89,30 +89,40 @@
 <nav class="navbar">
     <h1>Auth Proxy</h1>
     <div class="nav-links">
-        <a href="/">홈</a>
-        <a href="/login">로그인</a>
-        <a href="/docs">API 문서</a>
+        <div sec:authorize="isAuthenticated()">
+            <span th:text="${#authentication.name}"></span>
+        </div>
+        <a sec:authorize="isAnonymous()" href="/login">로그인 해주세요</a>
     </div>
 </nav>
 
 <div class="container">
-    <h2>환영합니다! 👋</h2>
-    <p>
-        Auth Proxy를 통해 <b>소셜 로그인</b>,<b>사용자 계정 관리</b>를 손쉽게 구현해보세요.<br>
-        애플리케이션의 로그인(<b>인증/인가</b>) 처리를 간편하게 이용해보세요.<br>
-        로그인하여 기능을 바로 체험해 보세요!
-    </p>
-    <a href="/oauth2/authorization/google">
-        <button type="button" class="google-login-btn">
-            <svg class="google-logo" viewBox="0 0 533.5 544.3" xmlns="http://www.w3.org/2000/svg">
-                <path fill="#4285f4" d="M533.5 278.4c0-17.3-1.5-34-4.3-50.3H272v95.4h146.9c-6.3 34-25.4 62.8-54 82v68h87.1c50.9-46.9 80.5-116.1 80.5-195.1z"/>
-                <path fill="#34a853" d="M272 544.3c72.6 0 133.7-24 178.2-65.1l-87.1-68c-24 16-54.8 25-91.1 25-69.9 0-129.3-47.1-150.5-110.3h-89.5v69.8c44.2 87.3 134 148.6 239.9 148.6z"/>
-                <path fill="#fbbc04" d="M121.5 323.9c-10.4-30.9-10.4-64.5 0-95.4v-69.8H32c-34.2 67.9-34.2 148.5 0 216.4l89.5-69.8z"/>
-                <path fill="#ea4335" d="M272 107.7c38.7 0 73.4 13.3 100.8 39.5l75.6-75.6C399.1 24 338 0 272 0 166 0 76.2 61.3 32 148.6l89.5 69.8c21.2-63.2 80.6-110.7 150.5-110.7z"/>
-            </svg>
-            구글 계정으로 시작하기
-        </button>
-    </a>
+    <div sec:authorize="isAnonymous()">
+        <h2>환영합니다! 👋</h2>
+        <p>
+            Auth Proxy를 통해 <b>소셜 로그인</b>,<b>사용자 계정 관리</b>를 손쉽게 구현해보세요.<br>
+            애플리케이션의 로그인(<b>인증/인가</b>) 처리를 간편하게 이용해보세요.<br>
+            로그인하여 기능을 바로 체험해 보세요!
+        </p>
+        <a href="/oauth2/authorization/google">
+            <button type="button" class="google-login-btn">
+                <svg class="google-logo" viewBox="0 0 533.5 544.3" xmlns="http://www.w3.org/2000/svg">
+                    <path fill="#4285f4" d="M533.5 278.4c0-17.3-1.5-34-4.3-50.3H272v95.4h146.9c-6.3 34-25.4 62.8-54 82v68h87.1c50.9-46.9 80.5-116.1 80.5-195.1z"/>
+                    <path fill="#34a853" d="M272 544.3c72.6 0 133.7-24 178.2-65.1l-87.1-68c-24 16-54.8 25-91.1 25-69.9 0-129.3-47.1-150.5-110.3h-89.5v69.8c44.2 87.3 134 148.6 239.9 148.6z"/>
+                    <path fill="#fbbc04" d="M121.5 323.9c-10.4-30.9-10.4-64.5 0-95.4v-69.8H32c-34.2 67.9-34.2 148.5 0 216.4l89.5-69.8z"/>
+                    <path fill="#ea4335" d="M272 107.7c38.7 0 73.4 13.3 100.8 39.5l75.6-75.6C399.1 24 338 0 272 0 166 0 76.2 61.3 32 148.6l89.5 69.8c21.2-63.2 80.6-110.7 150.5-110.7z"/>
+                </svg>
+                Google 로그인
+            </button>
+        </a>
+    </div>
+    <div sec:authorize="isAuthenticated()">
+        <h2 th:text="'안녕하세요, ' + ${#authentication.name} + '님!'">안녕하세요!</h2>
+        <p>로그인 상태입니다. 다양한 기능을 이용해보세요.</p>
+        <form th:action="@{/logout}" method="post">
+            <button type="submit">로그아웃</button>
+        </form>
+    </div>
 </div>
 <div class="footer">
     © 2025 Auth Proxy Demo | Powered by Spring Boot & Google OAuth2

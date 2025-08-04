@@ -1,4 +1,4 @@
-package com.khy.authproxy.security.handler;
+package com.khy.authproxy.config.security.handler;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
