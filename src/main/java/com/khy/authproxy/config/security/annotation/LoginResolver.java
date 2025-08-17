@@ -1,7 +1,7 @@
 package com.khy.authproxy.config.security.annotation;
 
 import com.khy.authproxy.config.security.dto.User;
-import com.khy.authproxy.config.security.jwt.JwtProvider;
+import com.khy.authproxy.config.security.jwt.JwtService;
 import io.jsonwebtoken.Claims;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
@@ -21,7 +21,7 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class LoginResolver implements HandlerMethodArgumentResolver {
 
-    private final JwtProvider jwtProvider;
+    private final JwtService jwtService;
 
     @Override
     public boolean supportsParameter(MethodParameter param) {
@@ -40,7 +40,7 @@ public class LoginResolver implements HandlerMethodArgumentResolver {
         Arrays.stream(request.getCookies())
                 .filter(cookie -> cookie.getName().equals("accessToken"))
                 .map(Cookie::getValue).findFirst().ifPresent(accessToken -> {
-                    Claims claims = jwtProvider.getClaimsFromToken(accessToken);
+                    Claims claims = jwtService.getClaimsFromToken(accessToken);
 
                     if(parameter.getParameterType().isAssignableFrom(String.class)) {
                         resolved.put("resolved", claims.getSubject());

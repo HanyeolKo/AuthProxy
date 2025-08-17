@@ -1,6 +1,6 @@
 package com.khy.authproxy.config.security.filter;
 
-import com.khy.authproxy.config.security.jwt.JwtProvider;
+import com.khy.authproxy.config.security.jwt.JwtService;
 import com.khy.authproxy.config.security.service.CustomUserDetailsService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -26,7 +26,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 
     private static final Logger log = LoggerFactory.getLogger(JwtAuthFilter.class);
 
-    private final JwtProvider jwtProvider;
+    private final JwtService jwtService;
     private final CustomUserDetailsService userDetailsService;
 
     @Override
@@ -46,8 +46,8 @@ public class JwtAuthFilter extends OncePerRequestFilter {
         }
 
         //토큰 검증
-        if(token != null && jwtProvider.validateToken(token)){
-            String userName = jwtProvider.getUserNameFromToken(token);
+        if(token != null && jwtService.validateToken(token)){
+            String userName = jwtService.getUserNameFromToken(token);
             log.info("[JwtAuthFilter] 토큰 유효, userName: {}", userName);
 
             UserDetails userDetails = null;
@@ -66,6 +66,8 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 
                 response.addCookie(accessCookie);
                 response.addCookie(refreshCookie);
+
+                response.sendRedirect("/");
 
                 return;
             }

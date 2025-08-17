@@ -1,8 +1,8 @@
 package com.khy.authproxy.config.security.handler;
 
-import com.khy.authproxy.domain.manager.entity.Manager;
-import com.khy.authproxy.domain.manager.repository.ManagerRepository;
-import com.khy.authproxy.config.security.jwt.JwtProvider;
+import com.khy.authproxy.domain.member.entity.Member;
+import com.khy.authproxy.domain.member.repository.MemberRepository;
+import com.khy.authproxy.config.security.jwt.JwtService;
 import com.khy.authproxy.config.security.strategy.OAuth2UserInfoExtractorFactory;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.Cookie;
@@ -24,11 +24,11 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class OAuthSuccessHandler implements AuthenticationSuccessHandler {
 
-    private final ManagerRepository managerRepository;
+    private final MemberRepository memberRepository;
     private final OAuth2UserInfoExtractorFactory extractorFactory;
     private final PasswordEncoder passwordEncoder;
 
-    private final JwtProvider jwtProvider;
+    private final JwtService jwtService;
 
     @Value("${jwt.ACCESS_TOKEN_VALID_TIME}")
     private long accessTokenExpireTime;
@@ -45,24 +45,24 @@ public class OAuthSuccessHandler implements AuthenticationSuccessHandler {
         // 전략 팩토리로 공급자별 email 추출
         String email = extractorFactory.get(registrationId).getEmail(oAuth2User);
 
-        Manager managerUser = managerRepository.findFirstByEmail(email);
+        Member userMember = memberRepository.findFirstByEmail(email);
 
         // 사용자 정보가 존재하지 않는 경우, 새로운 사용자 생성
-        if (managerUser == null) {
+        if (userMember == null) {
             String name = extractorFactory.get(registrationId).getName(oAuth2User);
             String loginId = email.split("@")[0]; // 이메일의 '@' 앞부분을 로그인 ID로 사용
             String password = passwordEncoder.encode(UUID.randomUUID().toString().substring(0,10)); // 임시 비밀번호 생성 (UUID의 일부를 사용)
-            managerUser = Manager.builder()
+            userMember = Member.builder()
                     .loginId(loginId)
                     .password(password) // 임시 비밀번호 생성
                     .email(email)
                     .name(name)
                     .build();
-            managerRepository.save(managerUser);
+            memberRepository.save(userMember);
         }
 
-        String accessToken = jwtProvider.createAccessToken(managerUser.getLoginId());
-        String refreshToken = jwtProvider.createRefreshToken(managerUser.getLoginId());
+        String refreshToken = jwtService.createRefreshToken(userMember.getLoginId());
+        String accessToken = jwtService.createAccessToken(refreshToken);
 
         //로그인 처리
         Cookie accessCookie = new Cookie("accessToken", accessToken);

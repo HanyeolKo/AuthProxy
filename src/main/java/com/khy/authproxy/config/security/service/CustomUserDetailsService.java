@@ -1,7 +1,7 @@
 package com.khy.authproxy.config.security.service;
 
-import com.khy.authproxy.domain.manager.entity.Manager;
-import com.khy.authproxy.domain.manager.repository.ManagerRepository;
+import com.khy.authproxy.domain.member.entity.Member;
+import com.khy.authproxy.domain.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -16,21 +16,21 @@ import java.util.Collections;
 @Service
 @RequiredArgsConstructor
 public class CustomUserDetailsService implements UserDetailsService {
-    private final ManagerRepository managerRepository;
+    private final MemberRepository memberRepository;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        Manager manager = managerRepository.findFirstByLoginId(username);
-        if (manager == null) {
+        Member member = memberRepository.findFirstByLoginId(username);
+        if (member == null) {
             throw new UsernameNotFoundException("해당 사용자를 찾을 수 없습니다: " + username);
         }
-        return new CustomUserDetails(manager);
+        return new CustomUserDetails(member);
     }
 
     @RequiredArgsConstructor
     public static class CustomUserDetails implements UserDetails {
 
-        private final Manager manager;
+        private final Member member;
 
         @Override
         public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -40,12 +40,12 @@ public class CustomUserDetailsService implements UserDetailsService {
 
         @Override
         public String getPassword() {
-            return manager.getPassword();
+            return member.getPassword();
         }
 
         @Override
         public String getUsername() {
-            return manager.getLoginId();
+            return member.getLoginId();
         }
 
         @Override
@@ -65,11 +65,11 @@ public class CustomUserDetailsService implements UserDetailsService {
 
         @Override
         public boolean isEnabled() {
-            return manager.isActive();
+            return member.isActive();
         }
 
-        public Manager getManager() {
-            return manager;
+        public Member getMember() {
+            return member;
         }
     }
 }
